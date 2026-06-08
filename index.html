@@ -1,0 +1,77 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Color Name Finder</title>
+<style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Segoe UI',sans-serif;background:#0f0f23;color:#fff;min-height:100vh;display:flex;justify-content:center;align-items:center}
+.ob{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.92);z-index:1000;display:flex;justify-content:center;align-items:center}.ob.hide{display:none}
+.oc{background:#1a1a3e;border-radius:20px;padding:40px;max-width:500px;width:90%;text-align:center}
+.oc h2{color:#a855f7;font-size:28px;margin-bottom:8px}.oc .sub{color:#888;font-size:14px}
+.stps{margin:25px 0;text-align:left;display:flex;flex-direction:column;gap:18px}
+.st{display:flex;gap:14px;align-items:flex-start}.st .n{width:32px;height:32px;border-radius:50%;background:#a855f7;color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px}
+.st h4{font-size:14px;margin-bottom:2px}.st p{font-size:12px;color:#888;line-height:1.5}
+.oc button{padding:14px 40px;border:none;border-radius:10px;background:#a855f7;color:#fff;font-size:16px;font-weight:600;cursor:pointer}
+.oc .sk{color:#555;font-size:12px;cursor:pointer;margin-top:12px;display:inline-block}
+.app{display:none;max-width:600px;width:100%;padding:20px;text-align:center}.app.show{display:block}
+h1{margin-bottom:5px}h1 span{background:linear-gradient(90deg,#a855f7,#fd79a8);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sub2{color:#666;margin-bottom:25px;font-size:14px}
+.input-row{display:flex;justify-content:center;gap:10px;margin-bottom:20px;flex-wrap:wrap}
+.input-row input[type=text]{padding:14px 20px;border:2px solid #333;border-radius:12px;background:#1a1a3e;color:#fff;font-size:18px;font-family:monospace;width:180px;text-align:center}
+.input-row input[type=text]:focus{outline:none;border-color:#a855f7}
+.input-row input[type=color]{width:56px;height:56px;border:3px solid #333;border-radius:12px;cursor:pointer;padding:3px;background:none}
+.input-row button{padding:14px 24px;border:none;border-radius:12px;background:#a855f7;color:#fff;font-weight:600;cursor:pointer;font-size:14px}
+.result{background:#1a1a3e;border-radius:20px;padding:30px;margin-bottom:20px;border:1px solid #2a2a4e}
+.color-preview{width:160px;height:160px;border-radius:20px;margin:0 auto 15px;border:3px solid #333}
+.color-name{font-size:28px;font-weight:700;margin-bottom:5px}
+.color-hex{font-family:monospace;font-size:16px;color:#888;margin-bottom:15px}
+.color-values{display:flex;justify-content:center;gap:15px;flex-wrap:wrap}
+.color-values .val{background:#0f0f23;border-radius:10px;padding:10px 15px;text-align:center;cursor:pointer}
+.color-values .val:hover{background:#2a2a4e}
+.color-values .val .v{font-family:monospace;font-size:14px;color:#a855f7}
+.color-values .val .l{font-size:10px;color:#666;margin-top:3px}
+.random-btn{padding:10px 20px;border:1px solid #333;border-radius:10px;background:transparent;color:#fff;cursor:pointer;font-size:13px;margin-bottom:15px}
+.random-btn:hover{border-color:#a855f7}
+.history{background:#1a1a3e;border-radius:14px;padding:15px;text-align:left}
+.history h3{color:#666;font-size:12px;margin-bottom:10px}
+.history .item{display:flex;align-items:center;gap:8px;padding:5px 0;font-size:13px;color:#aaa;border-bottom:1px solid #0f0f23}.history .item:last-child{border:none}
+.history .swatch{width:20px;height:20px;border-radius:4px;border:1px solid #333}
+.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#a855f7;color:#fff;padding:12px 24px;border-radius:10px;font-weight:600;opacity:0;transition:.3s}.toast.show{opacity:1}
+</style></head><body>
+<div class="ob" id="ob"><div class="oc">
+<h2>Color Name Finder</h2><p class="sub">Find the name of any color</p>
+<div class="stps">
+<div class="st"><div class="n">1</div><div><h4>Enter a Color</h4><p>Type a hex code (like #ff6b6b) or click the color picker to choose a color.</p></div></div>
+<div class="st"><div class="n">2</div><div><h4>See the Name</h4><p>The closest matching color name appears with a preview, hex, RGB, and HSL values.</p></div></div>
+<div class="st"><div class="n">3</div><div><h4>Copy Values</h4><p>Click any value card (HEX, RGB, HSL) to copy it to your clipboard.</p></div></div>
+</div>
+<button onclick="start()">Open Finder</button>
+<div class="sk" onclick="start()">Skip</div>
+</div></div>
+<div class="app" id="app">
+<h1><span>Color Name Finder</span></h1><p class="sub2">What is this color called?</p>
+<div class="input-row"><input type="text" id="hexInput" value="#a855f7" placeholder="#hex" oninput="findColor()"><input type="color" id="picker" value="#a855f7" oninput="fromPicker()"><button onclick="findColor()">Find</button></div>
+<button class="random-btn" onclick="random()">Random Color</button>
+<div class="result" id="result"><div class="color-preview" id="preview"></div><div class="color-name" id="name">Purple Heart</div><div class="color-hex" id="hexVal">#A855F7</div><div class="color-values"><div class="val" onclick="copy('rgb(168, 85, 247)')"><div class="v" id="rgbVal">rgb(168, 85, 247)</div><div class="l">RGB (click copy)</div></div><div class="val" onclick="copy('hsl(271, 91%, 65%)')"><div class="v" id="hslVal">hsl(271, 91%, 65%)</div><div class="l">HSL (click copy)</div></div></div></div>
+<div class="history"><h3>RECENT COLORS</h3><div id="hist"></div></div></div>
+<div class="toast" id="toast">Copied!</div>
+<script>
+var colors=[{n:"Black",h:"#000000"},{n:"White",h:"#FFFFFF"},{n:"Red",h:"#FF0000"},{n:"Crimson",h:"#DC143C"},{n:"Fire Brick",h:"#B22222"},{n:"Dark Red",h:"#8B0000"},{n:"Tomato",h:"#FF6347"},{n:"Coral",h:"#FF7F50"},{n:"Salmon",h:"#FA8072"},{n:"Orange Red",h:"#FF4500"},{n:"Dark Orange",h:"#FF8C00"},{n:"Orange",h:"#FFA500"},{n:"Gold",h:"#FFD700"},{n:"Yellow",h:"#FFFF00"},{n:"Khaki",h:"#F0E68C"},{n:"Olive",h:"#808000"},{n:"Dark Khaki",h:"#BDB76B"},{n:"Lawn Green",h:"#7CFC00"},{n:"Chartreuse",h:"#7FFF00"},{n:"Lime",h:"#00FF00"},{n:"Lime Green",h:"#32CD32"},{n:"Forest Green",h:"#228B22"},{n:"Green",h:"#008000"},{n:"Dark Green",h:"#006400"},{n:"Spring Green",h:"#00FF7F"},{n:"Medium Spring Green",h:"#00FA9A"},{n:"Sea Green",h:"#2E8B57"},{n:"Teal",h:"#008080"},{n:"Cyan",h:"#00FFFF"},{n:"Dark Cyan",h:"#008B8B"},{n:"Turquoise",h:"#40E0D0"},{n:"Medium Turquoise",h:"#48D1CC"},{n:"Steel Blue",h:"#4682B4"},{n:"Sky Blue",h:"#87CEEB"},{n:"Deep Sky Blue",h:"#00BFFF"},{n:"Dodger Blue",h:"#1E90FF"},{n:"Cornflower Blue",h:"#6495ED"},{n:"Royal Blue",h:"#4169E1"},{n:"Blue",h:"#0000FF"},{n:"Medium Blue",h:"#0000CD"},{n:"Dark Blue",h:"#00008B"},{n:"Navy",h:"#000080"},{n:"Midnight Blue",h:"#191970"},{n:"Blue Violet",h:"#8A2BE2"},{n:"Purple",h:"#800080"},{n:"Dark Violet",h:"#9400D3"},{n:"Dark Magenta",h:"#8B008B"},{n:"Medium Purple",h:"#9370DB"},{n:"Orchid",h:"#DA70D6"},{n:"Magenta",h:"#FF00FF"},{n:"Hot Pink",h:"#FF69B4"},{n:"Deep Pink",h:"#FF1493"},{n:"Pink",h:"#FFC0CB"},{n:"Light Pink",h:"#FFB6C1"},{n:"Rose",h:"#FF007F"},{n:"Maroon",h:"#800000"},{n:"Brown",h:"#A52A2A"},{n:"Sienna",h:"#A0522D"},{n:"Chocolate",h:"#D2691E"},{n:"Sandy Brown",h:"#F4A460"},{n:"Peru",h:"#CD853F"},{n:"Tan",h:"#D2B48C"},{n:"Wheat",h:"#F5DEB3"},{n:"Navajo White",h:"#FFDEAD"},{n:"Bisque",h:"#FFE4C4"},{n:"Snow",h:"#FFFAFA"},{n:"Ivory",h:"#FFFFF0"},{n:"Linen",h:"#FAF0E6"},{n:"Beige",h:"#F5F5DC"},{n:"Gray",h:"#808080"},{n:"Dark Gray",h:"#A9A9A9"},{n:"Silver",h:"#C0C0C0"},{n:"Light Gray",h:"#D3D3D3"},{n:"Gainsboro",h:"#DCDCDC"},{n:"Slate Gray",h:"#708090"},{n:"Dim Gray",h:"#696969"},{n:"Charcoal",h:"#36454F"},{n:"Indigo",h:"#4B0082"},{n:"Violet",h:"#EE82EE"},{n:"Lavender",h:"#E6E6FA"},{n:"Plum",h:"#DDA0DD"},{n:"Thistle",h:"#D8BFD8"},{n:"Mint",h:"#98FB98"},{n:"Aquamarine",h:"#7FFFD4"},{n:"Peach",h:"#FFDAB9"},{n:"Moccasin",h:"#FFE4B5"},{n:"Crimson",h:"#DC143C"}];
+var recent=[];
+function start(){document.getElementById('ob').classList.add('hide');document.getElementById('app').classList.add('show');localStorage.setItem('cnf_seen','1');findColor()}
+if(localStorage.getItem('cnf_seen')){document.getElementById('ob').classList.add('hide');document.getElementById('app').classList.add('show')}
+function fromPicker(){document.getElementById('hexInput').value=document.getElementById('picker').value;findColor()}
+function findColor(){var hex=document.getElementById('hexInput').value.trim();if(!hex.startsWith('#'))hex='#'+hex;
+if(!/^#[0-9a-fA-F]{6}$/.test(hex))return;
+document.getElementById('picker').value=hex;
+var r=parseInt(hex.substr(1,2),16),g=parseInt(hex.substr(3,2),16),b=parseInt(hex.substr(5,2),16);
+var closest=colors[0],minDist=Infinity;
+colors.forEach(function(c){var cr=parseInt(c.h.substr(1,2),16),cg=parseInt(c.h.substr(3,2),16),cb=parseInt(c.h.substr(5,2),16);
+var dist=Math.sqrt(Math.pow(r-cr,2)+Math.pow(g-cg,2)+Math.pow(b-cb,2));if(dist<minDist){minDist=dist;closest=c}});
+document.getElementById('preview').style.background=hex;
+document.getElementById('name').textContent=closest.n;document.getElementById('hexVal').textContent=hex.toUpperCase();
+document.getElementById('rgbVal').textContent='rgb('+r+', '+g+', '+b+')';
+var hsl=rgbToHsl(r,g,b);document.getElementById('hslVal').textContent='hsl('+hsl[0]+', '+hsl[1]+'%, '+hsl[2]+'%)';
+recent.unshift({name:closest.n,hex:hex.toUpperCase()});if(recent.length>8)recent.pop();
+document.getElementById('hist').innerHTML=recent.map(function(c){return '<div class="item"><div class="swatch" style="background:'+c.hex+'"></div>'+c.name+' '+c.hex+'</div>'}).join('');
+}
+function rgbToHsl(r,g,b){r/=255;g/=255;b/=255;var mx=Math.max(r,g,b),mn=Math.min(r,g,b),h,s,l=(mx+mn)/2;if(mx===mn){h=s=0}else{var d=mx-mn;s=l>0.5?d/(2-mx-mn):d/(mx+mn);switch(mx){case r:h=((g-b)/d+(g<b?6:0))/6;break;case g:h=((b-r)/d+2)/6;break;case b:h=((r-g)/d+4)/6;break}}return[Math.round(h*360),Math.round(s*100),Math.round(l*100)]}
+function random(){var hex='#'+Math.floor(Math.random()*16777215).toString(16).padStart(6,'0');document.getElementById('hexInput').value=hex;findColor()}
+function copy(t){navigator.clipboard.writeText(t);var e=document.getElementById('toast');e.classList.add('show');setTimeout(function(){e.classList.remove('show')},1500)}
+findColor();
+</script></body></html>
